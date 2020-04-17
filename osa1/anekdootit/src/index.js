@@ -16,27 +16,12 @@ const Display = (props) => {
  )
 }
 
-// const Best = (props) => {
-// var n = 0
-// let x = 0  
-
-// for(let i=0; i<props.votes.length; i++){
-//   if(props.votes[i] > x){
-//     n = i
-//   }
-// }
-//   return(
-//     <div>
-//       {props.anecdotes[n]}
-//     </div>
-//   )
-// }
-
 const App = (props) => {
   const [selected, setSelected] = useState(0)
   // Usestatena uusi array, pituutena anekdootien pituus ja täytetään nollilla
   const [votes, setVotes] = useState(new Array(props.anecdotes.length).fill(0))
-
+  const [best, setBest] = useState([0,0])
+ 
   function getRandomInt(max){
     return Math.floor(Math.random()*Math.floor(max));
   } 
@@ -49,6 +34,15 @@ const App = (props) => {
     const copy = [...votes]
     copy[selected] += 1
     setVotes(copy)
+    // Tein tähän samaan parhaan anekdootin tarkastelun
+    const bestcopy = [...best]
+    if(copy[selected] > best[0]){
+      // Ekaan alkioon suurin äänimäärä
+      bestcopy[0] = copy[selected]
+      // Toiseen indeksin arvo
+      bestcopy[1] = selected 
+      setBest(bestcopy)
+    }
    }
   
   return (
@@ -58,7 +52,7 @@ const App = (props) => {
       <Button handleClick = {randomAnecdote} text="Random anecdote" />
       <Button handleClick = {vote} text="Vote" />
       <h1>Best anecdote</h1>
-      {/* <Best anecdotes={props.anecdotes} votes = {votes}/> */}
+      <Display anecdotes={props.anecdotes[best[1]]} votes = {votes[best[1]]}/>
     </div>
   )
 }
