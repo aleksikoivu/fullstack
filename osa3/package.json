@@ -1,0 +1,21 @@
+{
+  "name": "osa3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "server":"json-server -p3001 --watch db.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "json-server": "^0.16.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}

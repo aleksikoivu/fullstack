@@ -1,45 +1,36 @@
-import React, { useState } from 'react';
-// import Filter from './components/Filter';
+import React, { useState, useEffect } from 'react';
 
+import Filter from './components/Filter';
+import ShowPersons from './components/ShowPersons'
+import NewPerson from './components/NewPerson'
+import Notification from './components/Message'
+//import Axios from 'axios';
+import personService from './services/persons'
 
-const Filter = (props) => {
-  return( 
-    <div>Filter phonebook by:
-      <input onChange = {props.filter}/>
-    </div>
-  )
-}
-
-const NewPerson = (props) => {
-  return(
-    <form onSubmit={props.submit}>
-    <div>
-      Name: <input 
-        value={props.name}
-        onChange={props.nameChange}/>
-    </div>
-    <div>
-      Number: <input
-        value={props.number}
-        onChange={props.numberChange}/>
-    </div>
-    <div>
-      <button type="submit">Add</button>
-    </div>
-  </form>
-  )
- }
-
+//npx json-server --port=3001 --watch db.json
 
 const App = () => {
 
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', id: 1, number:"040 491 247" },
-    { name: 'Mikki Hiiri', id: 2, number:"021 231 123" },
-    { name: 'Teppo Tulppu', id: 3, number: "123 888 666"}])
+  const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('Etunimi Sukunimi')
   const [ newNumber, setNewNumber ] = useState('040 123 123')
-  const [ personsToShow, setPersonsToShow ] = useState(persons)
+  const [ personsToShow, setPersonsToShow ] = useState([])
+  const [ message, setMessage] = useState()
+  const [ errorMessage, setErrorMessage] = useState()
+
+  useEffect(() => {
+    console.log("effect")
+    // Axios.get('http://localhost:3001/persons')
+    // .then(response => {
+    //   console.log("promise fulfilled")
+    //   setPersons(response.data)
+    //   setPersonsToShow(response.data)
+    personService.getAll()
+    .then(response => {
+      setPersons(response.data)
+      setPersonsToShow(response.data)
+    })
+  },[])
 
   const applyFilter = (event) => {
     console.log(event.target.value)
@@ -70,7 +61,7 @@ const App = () => {
     // uuden nimiolion luonti
     const nameObject = {
       name: newName,
-      id: persons.length +1,
+      id: Math.floor(Math.random()*1000),
       number: newNumber
     }
     // tarkastus sille että onko nimi jo listassa
@@ -78,40 +69,95 @@ const App = () => {
     // console.log(found)
     // found ei palauta undefinediä eli henkilö löytyy
     if(found !== undefined){
-      alert(`${newName} is already in the phonebook`)
+      const changedPerson = {...found, number: newNumber}
+      //alert(`${newName} is already in the phonebook`)
+      if(window.confirm(`Do you want to update ${newName}'s number?`)){
+        console.log("update")
+        personService.updatePerson(found.id, changedPerson)
+        .then(response=>{
+          console.log(response)
+          personService.getAll()
+          .then(response => {
+            setPersons(response.data)
+            setPersonsToShow(response.data)
+            setMessage(`${changedPerson.name} number changed`)
+            setTimeout(()=>{
+              setMessage(null)
+            }, 3000)
+          })
+        })
+      }
     }
     // muussa tapauksessa (found===undef) eli henkilöä ei löydy
     else{
     // uuden henkilön lisääminen taulukkoon
     setPersons(persons.concat(nameObject))
+    // pitäs varmaan saada joku päivitys tuolle listalle että se ilmestyy - check
+    setPersonsToShow(persons.concat(nameObject))
+
+    personService.create(nameObject)
+    .then(response=>{
+      console.log(response)
+      console.log("added")
+      setMessage(`${nameObject.name} added`)
+      setTimeout(()=>{
+        setMessage(null)
+      }, 3000)
+    })
 
     setNewName('')
     setNewNumber('')
+
     //console.log(persons)
     }
+  }
+
+  const deletePerson = (event) => {
+    if(window.confirm(`Delete person?`)){
+      //console.log("triggered again")
+      console.log(event.target.value)
+      //console.log(typeof(persons[0].id))
+      //console.log(typeof(event.target.value))
+      //haetaan se nimi vielä talteen
+      //let found = persons.find(person => person.name.toLowerCase() === nameObject.name.toLowerCase())
+      let toBeDeleted = persons.find(person => person.id === parseInt(event.target.value))
+      console.log(toBeDeleted)
+
+      personService.deletePerson(event.target.value)
+      .then(response => {
+        console.log(response.data)
+        console.log("deleted")
+        personService.getAll()
+        .then(response => {
+          setPersons(response.data)
+          setPersonsToShow(response.data)
+          setMessage(`${toBeDeleted.name} deleted`)
+          setTimeout(()=>{
+            setMessage(null)
+          }, 3000)
+        })
+      })
+      .catch(error => {
+        setErrorMessage(`${toBeDeleted.name} is already removed from the server`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        },3000)
+      })
+  }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-
+      <Notification Notification={message} errorMessage={errorMessage}/>
       <Filter filter={applyFilter}/>
 
       <NewPerson name = {newName} number = {newNumber} nameChange={handleNameChange} numberChange={handleNumberChange} submit={addName}/>
 
       <h2>Numbers</h2>
-      
 
-    <div>
-      {
-      personsToShow.map(persons=>
-      <ul key={persons.id}>
-        {persons.name} {persons.number}
-      </ul>
-      )}
-    </div>
-
-
+      <ShowPersons persons = {personsToShow} deleteP = {deletePerson}/>
+    
     </div>
   )
 
