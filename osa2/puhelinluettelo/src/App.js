@@ -27,6 +27,7 @@ const App = () => {
     //   setPersonsToShow(response.data)
     personService.getAll()
     .then(response => {
+      console.log(response.data)
       setPersons(response.data)
       setPersonsToShow(response.data)
     })
