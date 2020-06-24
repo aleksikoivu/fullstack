@@ -62,7 +62,7 @@ const App = () => {
     // uuden nimiolion luonti
     const nameObject = {
       name: newName,
-      id: Math.floor(Math.random()*1000),
+      //id: Math.floor(Math.random()*1000),
       number: newNumber
     }
     // tarkastus sille että onko nimi jo listassa
@@ -122,7 +122,7 @@ const App = () => {
       //haetaan se nimi vielä talteen
       //let found = persons.find(person => person.name.toLowerCase() === nameObject.name.toLowerCase())
       let toBeDeleted = persons.find(person => person.id === parseInt(event.target.value))
-      console.log(toBeDeleted)
+      console.log("to be deleted = ",toBeDeleted)
 
       personService.deletePerson(event.target.value)
       .then(response => {

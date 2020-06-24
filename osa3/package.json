@@ -7,15 +7,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "server": "json-server -p3001 --watch db.json"
+    "build:ui": "rm build && cd ../osa2/puhelinluettelo && npm run build --prod && cp -r build ../../osa3",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+    "logs:prod": "heroku logs --tail"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "heroku": "^7.42.1",
     "json-server": "^0.16.1",
+    "mongoose": "^5.9.20",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
