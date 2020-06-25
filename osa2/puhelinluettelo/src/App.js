@@ -65,6 +65,7 @@ const App = () => {
       //id: Math.floor(Math.random()*1000),
       number: newNumber
     }
+
     // tarkastus sille että onko nimi jo listassa
     let found = persons.find(person => person.name.toLowerCase() === nameObject.name.toLowerCase())
     // console.log(found)
@@ -91,19 +92,30 @@ const App = () => {
     }
     // muussa tapauksessa (found===undef) eli henkilöä ei löydy
     else{
-    // uuden henkilön lisääminen taulukkoon
-    setPersons(persons.concat(nameObject))
-    // pitäs varmaan saada joku päivitys tuolle listalle että se ilmestyy - check
-    setPersonsToShow(persons.concat(nameObject))
+
 
     personService.create(nameObject)
     .then(response=>{
+      // uuden henkilön lisääminen taulukkoon
+      setPersons(persons.concat(nameObject))
+      // pitäs varmaan saada joku päivitys tuolle listalle että se ilmestyy - check
+      setPersonsToShow(persons.concat(nameObject))
+      console.log("response from creation")
       console.log(response)
       console.log("added")
       setMessage(`${nameObject.name} added`)
       setTimeout(()=>{
         setMessage(null)
       }, 3000)
+    })
+    .catch(error => {
+      // console.log(error.response.data)
+      // console.log(error.response.data.error)
+      // console.log("error caught")
+      setErrorMessage(error.response.data.error)
+      setTimeout(()=>{
+        setErrorMessage(null)
+      },3000)
     })
 
     setNewName('')

@@ -2,7 +2,7 @@ import React from 'react';
 import '../index.css'
 
 const Notification = (props) => {
-    if (props.Notification === null){
+    if (props.Notification === null && props.errorMessage === null){
         return null
     }
     

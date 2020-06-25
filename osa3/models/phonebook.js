@@ -5,17 +5,17 @@ const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result =>{
-    console.log('connected to MongoDB')  
-    })  
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
+    .then(() => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('error connecting to MongoDB:', error.message)
     }
     )
 
 const numberSchema = new mongoose.Schema({
-    name: { type: String, unique: true},
-    number: {type: String, unique: true},
+    name: { type: String, unique: true, minlength:[3, 'Minimum lenght of name is 3 characters'] },
+    number: { type: String, unique: true, minlength:[8, 'Minimum lenght of number is 8 characters'] },
     date: Date
 })
 
