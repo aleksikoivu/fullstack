@@ -12,9 +12,7 @@ morgan.token('person',(req) => {
     return JSON.stringify(req.body)
 })
 
-
 app.use(express.static('build'))
-
 app.use(cors())
 app.use(express.json())
 app.use(morgan(function(tokens,req,res){
@@ -42,7 +40,6 @@ const errorHandler = (error, request, response, next) => {
     }
     next(error)
 }
-
 
 app.get('/',(req,res) => {
     //console.log("GET /")
