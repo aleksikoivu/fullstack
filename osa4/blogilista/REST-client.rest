@@ -1,0 +1,87 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"Piripetterin testiteksti",
+    "author":"Piripetteri30",
+    "url":"needspeed.net",
+    "likes":20,
+    "userId":"5efb642a2f41943c34e3e7b6"
+}
+
+###
+
+GET http://localhost:3003/api/blogs
+
+###
+GET http://localhost:3003/api/blogs/5efb1a1fa0a12b05c41ea5e8
+
+### 
+POST http://localhost:3003/api/blogs 
+Content-Type: application/json
+
+{
+    "title":"Helo world",
+    "author":"Keisari30"
+}
+
+###
+DELETE http://localhost:3003/api/blogs/5efb1a1fa0a12b05c41ea5e8
+
+### 
+PUT http://localhost:3003/api/blogs/5efb221c6b81a839808bb386
+Content-Type: application/json
+
+{
+    "likes":152
+}
+
+### 
+
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username":"Pu",
+    "name":"Allu",
+    "password":"sai"
+}
+
+### 
+GET http://localhost:3003/api/users
+###
+GET http://localhost:3003/api/blogs
+
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+    "username":"Piripetteri30",
+    "password":"sala40"
+}
+
+### 
+POST http://localhost:3003/api/blogs 
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlBpcmlwZXR0ZXJpMzAiLCJpZCI6IjVlZmI2NDJhMmY0MTk0M2MzNGUzZTdiNiIsImlhdCI6MTU5MzU5MjIwOH0.qShch-pGETGOTqC_DUb4CmbhdmXmMUiYexbA7Q29AGM
+
+{
+    "title":"This was made with authentication vol3",
+    "author":"Piripetteri30",
+    "url":"needspeed.net",
+    "likes":20
+}
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title":"This is an attempt without authorization",
+    "author":"Piripetteri30",
+    "url":"needspeed.net",
+    "likes":20,
+    "userId":"5efb642a2f41943c34e3e7b6"
+
+}
